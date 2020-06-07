@@ -1,20 +1,20 @@
-import { Reducer, Effect, Subscription } from "umi";
-import { getList, updateUserInfo, deleteUser } from "@/service/users";
+import { Reducer, Effect, Subscription } from 'umi';
+import { getList, updateUserInfo, deleteUser } from '@/service/users';
 
 interface userModelType {
-  namespace: 'users',
-  state: {},
+  namespace: 'users';
+  state: {};
   reducers: {
-    setData: Reducer
-  },
+    setData: Reducer;
+  };
   effects: {
-    getList: Effect,
-    changeUserInfo: Effect,
-    deleteItem: Effect
-  },
+    getList: Effect;
+    changeUserInfo: Effect;
+    deleteItem: Effect;
+  };
   subscriptions: {
-    setup: Subscription
-  }
+    setup: Subscription;
+  };
 }
 
 const userModel: userModelType = {
@@ -26,43 +26,47 @@ const userModel: userModelType = {
       const res = yield call(getList);
       yield put({
         type: 'setData',
-        payload: res.data
-      })
+        payload: res.data,
+      });
     },
 
     *changeUserInfo({ payload: { values, id } }, { put, call }) {
       yield call(updateUserInfo, {
         values,
-        id
-      })
+        id,
+      });
+      yield put({
+        type: 'getList',
+      });
     },
 
-    *deleteItem({payload: { id }}, { put, call }) {
+    *deleteItem({ payload: { id } }, { put, call }) {
       yield call(deleteUser, {
-        id
+        id,
       });
-    }
+      yield put({
+        type: 'getList',
+      });
+    },
   },
 
   reducers: {
     setData(state, action) {
-      return action.payload
-    }
+      return action.payload;
+    },
   },
 
   subscriptions: {
     setup({ dispatch, history }) {
-      return history.listen( (location) => {
-        if(location.pathname === '/users') {
+      return history.listen(location => {
+        if (location.pathname === '/users') {
           dispatch({
-            type: 'getList'
-          })
+            type: 'getList',
+          });
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 
 export default userModel;
-
-

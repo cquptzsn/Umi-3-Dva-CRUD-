@@ -1,8 +1,9 @@
-import { request } from "@@/plugin-request/request";
+import { request } from '@@/plugin-request/request';
+import { message } from 'antd';
 
 //获取用户数据列表
 export const getList = async () => {
-   return request('http://public-api-v1.aspirantzhang.com/users', {
+  return request('http://public-api-v1.aspirantzhang.com/users', {
     method: 'get',
   })
     .then(function(response) {
@@ -11,21 +12,21 @@ export const getList = async () => {
     .catch(function(error) {
       console.log(error);
     });
-}
+};
 
 //修改用户数据
 export const updateUserInfo = async ({ values, id }) => {
   return request(`http://public-api-v1.aspirantzhang.com/users/${id}`, {
     method: 'put',
-    data: values
+    data: values,
   })
     .then(function(response) {
-      console.log('已成功修改');
+      message.success('已编辑');
     })
     .catch(function(error) {
-      console.log(error);
+      message.error('编辑失败');
     });
-}
+};
 
 //删除某条用户数据
 export const deleteUser = async ({ id }) => {
@@ -33,10 +34,9 @@ export const deleteUser = async ({ id }) => {
     method: 'delete',
   })
     .then(function(response) {
-      console.log('已删除');
+      message.success('已删除');
     })
     .catch(function(error) {
-      console.log(error);
+      message.error('删除失败');
     });
-}
-
+};

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Table, Space, Popconfirm, message  } from 'antd';
-import { connect } from "dva";
-import UserModal from "@/pages/users/components/UserModal";
+import React, { useState } from 'react';
+import { Table, Space, Popconfirm } from 'antd';
+import { connect } from 'dva';
+import UserModal from '@/pages/users/components/UserModal';
 
 import styles from './index.less';
 
@@ -25,11 +25,11 @@ const UserTable = ({ userInfo, dispatch }) => {
       dataIndex: 'email',
       key: 'email',
       render: text => {
-        if(text) {
-          return <a>{text}</a>
+        if (text) {
+          return <a>{text}</a>;
         }
-        return '--'
-      }
+        return '--';
+      },
     },
     {
       title: 'Create_time',
@@ -44,15 +44,22 @@ const UserTable = ({ userInfo, dispatch }) => {
     {
       title: 'Action',
       key: 'action',
-      render: (record) => (
+      render: record => (
         <Space size="middle">
           <a onClick={() => handleEdit(record)}>Edit</a>
-          <Popconfirm title={'Are you sure delete this?'}
-                      onConfirm={confirm}
-                      okText="Yes"
-                      cancelText="No"
+          <Popconfirm
+            title={'Are you sure delete this?'}
+            onConfirm={confirm}
+            okText="Yes"
+            cancelText="No"
           >
-            <a onClick={() => {setRecord(record)}}>Delete</a>
+            <a
+              onClick={() => {
+                setRecord(record);
+              }}
+            >
+              Delete
+            </a>
           </Popconfirm>
         </Space>
       ),
@@ -61,56 +68,57 @@ const UserTable = ({ userInfo, dispatch }) => {
 
   const confirm = () => {
     const id = record.id;
-    message.success('Deleted');
     dispatch({
       type: 'users/deleteItem',
       payload: {
-        id
-      }
-    })
-  }
+        id,
+      },
+    });
+  };
 
-  const handleEdit = (record) => {
+  const handleEdit = record => {
     setVisible(true);
     setRecord(record);
-  }
+  };
 
   const okHandler = () => {
     setVisible(false);
-  }
+  };
 
   const cancelHandler = () => {
     setVisible(false);
-  }
+  };
 
-  const onFinish = (values) => {
+  const onFinish = values => {
     const id = record.id;
     dispatch({
       type: 'users/changeUserInfo',
       payload: {
         values,
-        id
-      }
-    })
-  }
+        id,
+      },
+    });
+    setVisible(false);
+  };
 
   return (
     <div className={styles.userTable}>
-      <Table columns={columns} dataSource={userInfo} rowKey='id'/>
-      <UserModal visible={isVisible}
-                 // onOk={okHandler}
-                 onCancel={cancelHandler}
-                 record={record}
-                 onFinish={onFinish}
+      <Table columns={columns} dataSource={userInfo} rowKey="id" />
+      <UserModal
+        visible={isVisible}
+        // onOk={okHandler}
+        onCancel={cancelHandler}
+        record={record}
+        onFinish={onFinish}
       />
     </div>
-  )
-}
+  );
+};
 
-const mapStateToProps = ({users}) => {
+const mapStateToProps = ({ users }) => {
   return {
-    userInfo: users
-  }
-}
+    userInfo: users,
+  };
+};
 
 export default connect(mapStateToProps)(UserTable);
