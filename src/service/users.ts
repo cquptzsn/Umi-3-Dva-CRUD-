@@ -40,3 +40,17 @@ export const deleteUser = async ({ id }) => {
       message.error('删除失败');
     });
 };
+
+//新增用户
+export const addUser = async ({ values }) => {
+  return request('http://public-api-v1.aspirantzhang.com/users', {
+    method: 'post',
+    data: values,
+  })
+    .then(function(response) {
+      message.success('添加成功');
+    })
+    .catch(function(error) {
+      message.error('添加失败');
+    });
+};

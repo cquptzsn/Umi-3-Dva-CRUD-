@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Space, Popconfirm } from 'antd';
+import { Table, Space, Popconfirm, Button } from 'antd';
 import { connect } from 'dva';
 import UserModal from '@/pages/users/components/UserModal';
 
@@ -90,19 +90,42 @@ const UserTable = ({ userInfo, dispatch }) => {
   };
 
   const onFinish = values => {
-    const id = record.id;
-    dispatch({
-      type: 'users/changeUserInfo',
-      payload: {
-        values,
-        id,
-      },
-    });
+    // const id = record.id;
+    let id = 0;
+    if (record) {
+      id = record.id;
+    }
+    if (id) {
+      console.log('edit');
+      dispatch({
+        type: 'users/changeUserInfo',
+        payload: {
+          values,
+          id,
+        },
+      });
+    } else {
+      console.log('add');
+      dispatch({
+        type: 'users/addUserItem',
+        payload: {
+          values,
+        },
+      });
+    }
+
     setVisible(false);
+  };
+
+  const handleAddClick = () => {
+    setVisible(true);
   };
 
   return (
     <div className={styles.userTable}>
+      <Button type="primary" onClick={handleAddClick}>
+        add
+      </Button>
       <Table columns={columns} dataSource={userInfo} rowKey="id" />
       <UserModal
         visible={isVisible}

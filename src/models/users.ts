@@ -1,5 +1,5 @@
 import { Reducer, Effect, Subscription } from 'umi';
-import { getList, updateUserInfo, deleteUser } from '@/service/users';
+import { getList, updateUserInfo, deleteUser, addUser } from '@/service/users';
 
 interface userModelType {
   namespace: 'users';
@@ -11,6 +11,7 @@ interface userModelType {
     getList: Effect;
     changeUserInfo: Effect;
     deleteItem: Effect;
+    addUserItem: Effect;
   };
   subscriptions: {
     setup: Subscription;
@@ -48,8 +49,16 @@ const userModel: userModelType = {
         type: 'getList',
       });
     },
-  },
 
+    *addUserItem({ payload: { values } }, { put, call }) {
+      yield call(addUser, {
+        values,
+      });
+      yield put({
+        type: 'getList',
+      });
+    },
+  },
   reducers: {
     setData(state, action) {
       return action.payload;
