@@ -119,6 +119,7 @@ const UserTable = ({ userInfo, dispatch }) => {
 
   const handleAddClick = () => {
     setVisible(true);
+    setRecord(undefined);
   };
 
   return (
