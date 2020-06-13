@@ -5,7 +5,7 @@ import UserModal from '@/pages/users/components/UserModal';
 
 import styles from './index.less';
 
-const UserTable = ({ userInfo, dispatch }) => {
+const UserTable = ({ userInfo, dispatch, userListLoading }) => {
   const [isVisible, setVisible] = useState(false);
   const [record, setRecord] = useState(undefined);
   const columns = [
@@ -127,7 +127,12 @@ const UserTable = ({ userInfo, dispatch }) => {
       <Button type="primary" onClick={handleAddClick}>
         add
       </Button>
-      <Table columns={columns} dataSource={userInfo} rowKey="id" />
+      <Table
+        columns={columns}
+        dataSource={userInfo}
+        rowKey="id"
+        loading={userListLoading}
+      />
       <UserModal
         visible={isVisible}
         // onOk={okHandler}
@@ -139,9 +144,11 @@ const UserTable = ({ userInfo, dispatch }) => {
   );
 };
 
-const mapStateToProps = ({ users }) => {
+const mapStateToProps = ({ users, loading }) => {
+  console.log(loading);
   return {
     userInfo: users,
+    userListLoading: loading.models.users,
   };
 };
 
