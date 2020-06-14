@@ -1,7 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, FC } from 'react';
 import { Modal, Form, Input } from 'antd';
+import { SingleUserType, FormValues } from '@/types/users';
 
-const UserModal = props => {
+interface UserModalProps {
+  visible: boolean;
+  record: SingleUserType | undefined;
+  onCancel: () => void;
+  onFinish: (values: FormValues) => void;
+}
+
+const UserModal: FC<UserModalProps> = props => {
   const { visible, record, onCancel, onFinish } = props;
   useEffect(() => {
     if (record === undefined) {
@@ -17,7 +25,7 @@ const UserModal = props => {
     form.submit();
   };
 
-  const onFinishFailed = errorInfo => {
+  const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
 

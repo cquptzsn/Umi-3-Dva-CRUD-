@@ -1,13 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, FC } from 'react';
 import { Table, Space, Popconfirm, Button } from 'antd';
 import { connect } from 'dva';
 import UserModal from '@/pages/users/components/UserModal';
 
+import { UserState } from '@/models/users';
+import { SingleUserType, FormValues } from '@/types/users';
+
 import styles from './index.less';
 
-const UserTable = ({ userInfo, dispatch, userListLoading }) => {
+interface UserTableProps {
+  userInfo: UserState;
+  dispatch: (action: { type: string; payload?: any }) => any;
+  loading: boolean;
+}
+
+const UserTable: FC<UserTableProps> = ({ userInfo, dispatch, loading }) => {
   const [isVisible, setVisible] = useState(false);
-  const [record, setRecord] = useState(undefined);
+  const [record, setRecord] = useState<SingleUserType | undefined>(undefined);
   const columns = [
     {
       title: 'ID',
@@ -18,13 +27,13 @@ const UserTable = ({ userInfo, dispatch, userListLoading }) => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      render: text => <a>{text}</a>,
+      render: (text: string) => <a>{text}</a>,
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
-      render: text => {
+      render: (text: string) => {
         if (text) {
           return <a>{text}</a>;
         }
@@ -44,7 +53,7 @@ const UserTable = ({ userInfo, dispatch, userListLoading }) => {
     {
       title: 'Action',
       key: 'action',
-      render: record => (
+      render: (record: SingleUserType) => (
         <Space size="middle">
           <a onClick={() => handleEdit(record)}>Edit</a>
           <Popconfirm
@@ -76,7 +85,7 @@ const UserTable = ({ userInfo, dispatch, userListLoading }) => {
     });
   };
 
-  const handleEdit = record => {
+  const handleEdit = (record: SingleUserType) => {
     setVisible(true);
     setRecord(record);
   };
@@ -89,14 +98,12 @@ const UserTable = ({ userInfo, dispatch, userListLoading }) => {
     setVisible(false);
   };
 
-  const onFinish = values => {
-    // const id = record.id;
+  const onFinish = (values: FormValues) => {
     let id = 0;
     if (record) {
       id = record.id;
     }
     if (id) {
-      console.log('edit');
       dispatch({
         type: 'users/changeUserInfo',
         payload: {
@@ -131,7 +138,7 @@ const UserTable = ({ userInfo, dispatch, userListLoading }) => {
         columns={columns}
         dataSource={userInfo}
         rowKey="id"
-        loading={userListLoading}
+        loading={loading}
       />
       <UserModal
         visible={isVisible}
@@ -144,12 +151,7 @@ const UserTable = ({ userInfo, dispatch, userListLoading }) => {
   );
 };
 
-const mapStateToProps = ({ users, loading }) => {
-  console.log(loading);
-  return {
-    userInfo: users,
-    userListLoading: loading.models.users,
-  };
-};
-
-export default connect(mapStateToProps)(UserTable);
+export default connect(({ loading, users }: any) => ({
+  userInfo: users,
+  loading: loading.effects['users/getList'],
+}))(UserTable);

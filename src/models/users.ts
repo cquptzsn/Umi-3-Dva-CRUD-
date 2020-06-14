@@ -1,11 +1,21 @@
 import { Reducer, Effect, Subscription } from 'umi';
 import { getList, updateUserInfo, deleteUser, addUser } from '@/service/users';
+import { SingleUserType } from '@/types/users';
+
+export interface UserState {
+  data: SingleUserType[];
+  meta: {
+    total: number;
+    per_page: number;
+    page: number;
+  };
+}
 
 interface userModelType {
   namespace: 'users';
-  state: {};
+  state: UserState;
   reducers: {
-    setData: Reducer;
+    setData: Reducer<UserState>;
   };
   effects: {
     getList: Effect;

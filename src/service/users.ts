@@ -1,5 +1,6 @@
 import { request } from '@@/plugin-request/request';
 import { message } from 'antd';
+import { FormValues } from '@/types/users';
 
 //获取用户数据列表
 export const getList = async () => {
@@ -15,7 +16,13 @@ export const getList = async () => {
 };
 
 //修改用户数据
-export const updateUserInfo = async ({ values, id }) => {
+export const updateUserInfo = async ({
+  values,
+  id,
+}: {
+  values: FormValues;
+  id: number;
+}) => {
   return request(`http://public-api-v1.aspirantzhang.com/users/${id}`, {
     method: 'put',
     data: values,
@@ -29,7 +36,7 @@ export const updateUserInfo = async ({ values, id }) => {
 };
 
 //删除某条用户数据
-export const deleteUser = async ({ id }) => {
+export const deleteUser = async ({ id }: { id: number }) => {
   return request(`http://public-api-v1.aspirantzhang.com/users/${id}`, {
     method: 'delete',
   })
@@ -42,7 +49,7 @@ export const deleteUser = async ({ id }) => {
 };
 
 //新增用户
-export const addUser = async ({ values }) => {
+export const addUser = async ({ values }: { values: FormValues }) => {
   return request('http://public-api-v1.aspirantzhang.com/users', {
     method: 'post',
     data: values,
